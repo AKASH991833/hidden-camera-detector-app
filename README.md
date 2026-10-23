@@ -44,3 +44,20 @@ CI builds the APK on every push via GitHub Actions.
 
 - Android 8.0+ (minSdk 26), camera recommended
 - Built against Android 15
+
+## Screenshots
+
+Rendered UI verification (Paparazzi) of every screen, dark and light themes.
+
+| Screen | Dark | Light |
+| --- | --- | --- |
+| Home | ![Home dark](docs/screenshots/final-home_dark.png) | ![Home light](docs/screenshots/final-home_light.png) |
+| Guided Inspection | ![Inspection dark](docs/screenshots/final-inspection_dark.png) | ![Inspection light](docs/screenshots/final-inspection_light.png) |
+| Lens Glint | ![Lens dark](docs/screenshots/final-lens_dark.png) | ![Lens light](docs/screenshots/final-lens_light.png) |
+| IR Light Scan | ![IR dark](docs/screenshots/final-ir_dark.png) | ![IR light](docs/screenshots/final-ir_light.png) |
+| Wi-Fi Devices | ![Wi-Fi dark](docs/screenshots/final-wifi_dark.png) | ![Wi-Fi light](docs/screenshots/final-wifi_light.png) |
+| Magnetic Sensor | ![Magnetic dark](docs/screenshots/final-magnetic_dark.png) | ![Magnetic light](docs/screenshots/final-magnetic_light.png) |
+| Report | ![Report dark](docs/screenshots/final-report_dark.png) | ![Report light](docs/screenshots/final-report_light.png) |
+| History | ![History dark](docs/screenshots/final-history_dark.png) | ![History light](docs/screenshots/final-history_light.png) |
+| Guide | ![Guide dark](docs/screenshots/final-guide_dark.png) | ![Guide light](docs/screenshots/final-guide_light.png) |
+| Settings | ![Settings dark](docs/screenshots/final-settings_dark.png) | ![Settings light](docs/screenshots/final-settings_light.png) |
