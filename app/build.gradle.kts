@@ -1,4 +1,4 @@
-plugins { id("com.android.application"); kotlin("android") }
+plugins { id("com.android.application"); kotlin("android"); id("app.cash.paparazzi") }
 android {
   namespace = "com.akash.camdetector"
   compileSdk = 34
@@ -21,3 +21,5 @@ dependencies {
   implementation("androidx.core:core-ktx:1.13.1")
   implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.3")
 }
+
+tasks.withType<Test>().configureEach { maxHeapSize = "1400m" }
