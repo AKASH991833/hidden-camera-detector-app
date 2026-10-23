@@ -22,11 +22,19 @@ jobs:
         with: { gradle-version: "8.9" }
       - run: gradle :app:recordPaparazziDebug --no-daemon
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: paparazzi-renders
           path: |
             app/src/test/snapshots/**
             app/build/reports/paparazzi/**
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: paparazzi-test-report
+          path: |
+            app/build/reports/tests/testDebugUnitTest/**
+            app/build/test-results/testDebugUnitTest/**
 
   screenshots:
     runs-on: macos-latest
