@@ -28,9 +28,48 @@ jobs:
           target: google_apis
           arch: x86_64
           script: |
+            set -e
             adb install -r app/build/outputs/apk/debug/app-debug.apk
-            adb shell pm grant com.akash.camdetector android.permission.CAMERA || true
             mkdir -p shots
+            adb logcat -c
+
+            tap_text() {
+              # uiautomator dump -> tap center of first node containing $1; returns 0 on hit
+              adb shell uiautomator dump /sdcard/ui.xml >/dev/null 2>&1
+              adb pull /sdcard/ui.xml /tmp/ui.xml >/dev/null 2>&1
+              B=$(grep -o 'text="[^"]*'"$1"'[^"]*"[^>]*bounds="\[[0-9]*,[0-9]*\]\[[0-9]*,[0-9]*\]"' /tmp/ui.xml | head -1 | grep -o 'bounds="[^"]*"' | grep -o '[0-9]*' | tr '\n' ' ')
+              set -- $B
+              [ -n "$4" ] || return 1
+              X=$(( ($1 + $3) / 2 )); Y=$(( ($2 + $4) / 2 ))
+              adb shell input tap $X $Y
+              sleep 3
+              return 0
+            }
+
+            # --- smoke: real UI taps, camera permission NOT granted (denial path) ---
+            adb shell am force-stop com.akash.camdetector
+            adb shell am start -W -n com.akash.camdetector/.MainActivity
+            sleep 6
+            adb exec-out screencap -p > shots/smoke_home_default.png
+            if tap_text "Start"; then
+              adb exec-out screencap -p > shots/smoke_after_start_tap.png
+              adb shell uiautomator dump /sdcard/ui2.xml >/dev/null 2>&1
+              adb pull /sdcard/ui2.xml /tmp/ui2.xml >/dev/null 2>&1
+              grep -qi 'Step 1' /tmp/ui2.xml && echo 'SMOKE: inspection opened via tap OK' > shots/smoke_result.txt || echo 'SMOKE: start tap did not open inspection' > shots/smoke_result.txt
+              # lens step should show camera permission request/denial UI
+              sleep 2
+              adb shell uiautomator dump /sdcard/ui3.xml >/dev/null 2>&1
+              adb pull /sdcard/ui3.xml /tmp/ui3.xml >/dev/null 2>&1
+              grep -qiE 'permission|allow|deny|camera access' /tmp/ui3.xml && echo 'SMOKE: permission prompt/denial UI present (expected without grant)' >> shots/smoke_result.txt || echo 'SMOKE: no permission UI detected' >> shots/smoke_result.txt
+              adb exec-out screencap -p > shots/smoke_lens_permission_state.png
+              # deny if system dialog is up
+              tap_text "Deny" || tap_text "Don" || true
+            else
+              echo 'SMOKE: Start button not found on home' > shots/smoke_result.txt
+            fi
+
+            # --- hook screenshots: every screen, both themes ---
+            adb shell pm grant com.akash.camdetector android.permission.CAMERA || true
             for dark in dark light; do
               if [ "$dark" = "dark" ]; then dz=true; else dz=false; fi
               for scr in home history guide settings inspection lens ir wifi magnetic report; do
@@ -40,5 +79,12 @@ jobs:
                 adb exec-out screencap -p > "shots/${dark}_${scr}.png"
               done
             done
+
+            adb logcat -d > shots/logcat.txt
+            grep -iE 'FATAL EXCEPTION|AndroidRuntime' shots/logcat.txt | head -20 > shots/logcat_crashes.txt || true
       - uses: actions/upload-artifact@v4
-        with: { name: emulator-screenshots, path: shots/*.png }
+        with:
+          name: emulator-screenshots
+          path: |
+            shots/*.png
+            shots/*.txt

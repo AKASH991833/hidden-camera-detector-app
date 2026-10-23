@@ -38,7 +38,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val store = ReportStore(this)
-        val shotScreenName = intent.getStringExtra("shot_screen")
+        // Screenshot hook for CI emulator verification only; disabled in release builds
+        // so injected extras can never pre-fill screens or findings for users.
+        val isDebugBuild = (applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE) != 0
+        val shotScreenName = if (isDebugBuild) intent.getStringExtra("shot_screen") else null
         val shotDark = intent.getBooleanExtra("shot_dark", store.isDarkTheme())
         setContent {
             var dark by remember { mutableStateOf(if (shotScreenName != null) shotDark else store.isDarkTheme()) }
