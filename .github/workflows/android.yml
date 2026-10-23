@@ -1,0 +1,44 @@
+name: Android APK
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: 17 }
+      - uses: gradle/actions/setup-gradle@v4
+        with: { gradle-version: "8.9" }
+      - run: gradle assembleDebug --no-daemon
+      - uses: actions/upload-artifact@v4
+        with: { name: app-debug-apk, path: app/build/outputs/apk/debug/app-debug.apk }
+  screenshots:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: 17 }
+      - uses: gradle/actions/setup-gradle@v4
+        with: { gradle-version: "8.9" }
+      - run: gradle assembleDebug --no-daemon
+      - name: Capture every screen in dark and light themes
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          script: |
+            adb install -r app/build/outputs/apk/debug/app-debug.apk
+            adb shell pm grant com.akash.camdetector android.permission.CAMERA || true
+            mkdir -p shots
+            for dark in dark light; do
+              if [ "$dark" = "dark" ]; then dz=true; else dz=false; fi
+              for scr in home history guide settings inspection lens ir wifi magnetic report; do
+                adb shell am force-stop com.akash.camdetector
+                adb shell am start -W -n com.akash.camdetector/.MainActivity --es shot_screen "$scr" --ez shot_dark "$dz"
+                sleep 5
+                adb exec-out screencap -p > "shots/${dark}_${scr}.png"
+              done
+            done
+      - uses: actions/upload-artifact@v4
+        with: { name: emulator-screenshots, path: shots/*.png }

@@ -20,6 +20,7 @@ import com.akash.camdetector.data.Report
 import com.akash.camdetector.data.ReportStore
 import com.akash.camdetector.data.Tool
 import com.akash.camdetector.data.ToolFinding
+import com.akash.camdetector.data.ToolStatus
 import com.akash.camdetector.ui.*
 
 sealed class Screen {
@@ -37,12 +38,15 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val store = ReportStore(this)
+        val shotScreenName = intent.getStringExtra("shot_screen")
+        val shotDark = intent.getBooleanExtra("shot_dark", store.isDarkTheme())
         setContent {
-            var dark by remember { mutableStateOf(store.isDarkTheme()) }
+            var dark by remember { mutableStateOf(if (shotScreenName != null) shotDark else store.isDarkTheme()) }
             CamTheme(dark = dark) {
                 AppNav(
                     store = store,
                     dark = dark,
+                    initialScreen = shotScreenFromName(shotScreenName),
                     onTheme = {
                         dark = it
                         store.setDarkTheme(it)
@@ -54,8 +58,8 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun AppNav(store: ReportStore, dark: Boolean, onTheme: (Boolean) -> Unit) {
-    var screen by remember { mutableStateOf<Screen>(Screen.Home) }
+fun AppNav(store: ReportStore, dark: Boolean, onTheme: (Boolean) -> Unit, initialScreen: Screen? = null) {
+    var screen by remember { mutableStateOf<Screen>(initialScreen ?: Screen.Home) }
     val backStack = remember { mutableStateListOf<Screen>() }
     var reportsVersion by remember { mutableStateOf(0) }
 
@@ -182,5 +186,29 @@ fun AppNav(store: ReportStore, dark: Boolean, onTheme: (Boolean) -> Unit) {
                 )
             }
         }
+    }
+}
+
+
+private fun shotScreenFromName(name: String?): Screen? {
+    return when (name) {
+        "home" -> Screen.Home
+        "history" -> Screen.History
+        "guide" -> Screen.Guide
+        "settings" -> Screen.Settings
+        "inspection" -> Screen.Inspection
+        "lens" -> Screen.ToolScreen(Tool.LENS_GLINT)
+        "ir" -> Screen.ToolScreen(Tool.IR_SCAN)
+        "wifi" -> Screen.ToolScreen(Tool.WIFI)
+        "magnetic" -> Screen.ToolScreen(Tool.MAGNETIC)
+        "report" -> Screen.NewReport(
+            listOf(
+                ToolFinding(Tool.LENS_GLINT, ToolStatus.NO_CLUE, "Example: no lens-like reflection was marked during this inspection."),
+                ToolFinding(Tool.IR_SCAN, ToolStatus.NOT_TESTED, "Example: this device could not emit or view IR light."),
+                ToolFinding(Tool.WIFI, ToolStatus.REVIEW, "Example: devices were found on your network; review any you do not recognize."),
+                ToolFinding(Tool.MAGNETIC, ToolStatus.NO_CLUE, "Example: magnetic field stayed near your baseline.")
+            )
+        )
+        else -> null
     }
 }

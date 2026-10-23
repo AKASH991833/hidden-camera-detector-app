@@ -1,0 +1,20 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.akash.camdetector.app-mergeDebugResources-46:/values-hdpi-v4/values-hdpi-v4.xml",
+            "map": [
+                {
+                    "source": "/home/sandbox/.gradle/caches/8.9/transforms/d23c1c1a9d91d52b8fe177758fc6d017/transformed/appcompat-1.1.0/res/values-hdpi-v4/values-hdpi-v4.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endLines": "6",
+                        "endColumns": "13",
+                        "endOffsets": "327"
+                    }
+                }
+            ]
+        }
+    ]
+}
