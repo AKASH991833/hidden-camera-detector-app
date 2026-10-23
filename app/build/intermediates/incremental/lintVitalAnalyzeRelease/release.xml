@@ -6,7 +6,7 @@
     mergedManifest="build/intermediates/merged_manifest/release/processReleaseMainManifest/AndroidManifest.xml"
     proguardFiles="build/intermediates/default_proguard_files/global/proguard-android.txt-8.5.2"
     partialResultsDir="build/intermediates/lint_vital_partial_results/release/lintVitalAnalyzeRelease/out"
-    desugaredMethodsFiles="/home/sandbox/.gradle/caches/8.9/transforms/a038ec7e8ac8062534bc4fecb0615fc8/transformed/D8BackportedDesugaredMethods.txt">
+    desugaredMethodsFiles="/home/sandbox/.gradle/caches/8.9/transforms/fec3c6ee5ca189b0092bc2b2083a54f0/transformed/D8BackportedDesugaredMethods.txt">
   <buildFeatures
       namespacing="REQUIRED"/>
   <sourceProviders>
@@ -26,6 +26,6 @@
       applicationId="com.akash.camdetector"
       generatedSourceFolders="build/generated/ap_generated_sources/release/out"
       generatedResourceFolders="build/generated/res/resValues/release"
-      desugaredMethodsFiles="/home/sandbox/.gradle/caches/8.9/transforms/a038ec7e8ac8062534bc4fecb0615fc8/transformed/D8BackportedDesugaredMethods.txt">
+      desugaredMethodsFiles="/home/sandbox/.gradle/caches/8.9/transforms/fec3c6ee5ca189b0092bc2b2083a54f0/transformed/D8BackportedDesugaredMethods.txt">
   </artifact>
 </variant>

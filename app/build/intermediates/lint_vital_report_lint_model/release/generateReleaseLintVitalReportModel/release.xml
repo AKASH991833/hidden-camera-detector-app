@@ -26,6 +26,6 @@
       applicationId="com.akash.camdetector"
       generatedSourceFolders="build/generated/ap_generated_sources/release/out"
       generatedResourceFolders="build/generated/res/resValues/release"
-      desugaredMethodsFiles="/home/sandbox/.gradle/caches/8.9/transforms/a038ec7e8ac8062534bc4fecb0615fc8/transformed/D8BackportedDesugaredMethods.txt">
+      desugaredMethodsFiles="/home/sandbox/.gradle/caches/8.9/transforms/fec3c6ee5ca189b0092bc2b2083a54f0/transformed/D8BackportedDesugaredMethods.txt">
   </artifact>
 </variant>

@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -24,8 +25,9 @@ import kotlin.math.sqrt
 @Composable
 fun MagneticScreen(onBack: () -> Unit, flow: FlowCallbacks? = null) {
     val context = LocalContext.current
-    val sensorManager = remember { context.getSystemService(Context.SENSOR_SERVICE) as SensorManager }
-    val sensor = remember { sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) }
+    val inspectionMode = LocalInspectionMode.current
+    val sensorManager = remember { if (inspectionMode) null else context.getSystemService(Context.SENSOR_SERVICE) as SensorManager }
+    val sensor = remember { sensorManager?.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD) }
     var reading by remember { mutableStateOf<Float?>(null) }
     var baseline by remember { mutableStateOf<Float?>(null) }
 
@@ -39,10 +41,10 @@ fun MagneticScreen(onBack: () -> Unit, flow: FlowCallbacks? = null) {
             }
             override fun onAccuracyChanged(s: Sensor?, accuracy: Int) {}
         }
-        if (sensor != null) {
+        if (!inspectionMode && sensor != null && sensorManager != null) {
             sensorManager.registerListener(listener, sensor, SensorManager.SENSOR_DELAY_UI)
         }
-        onDispose { sensorManager.unregisterListener(listener) }
+        onDispose { sensorManager?.unregisterListener(listener) }
     }
 
     Column(modifier = Modifier.fillMaxSize()) {

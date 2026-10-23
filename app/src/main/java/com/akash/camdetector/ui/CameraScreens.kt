@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -30,6 +31,11 @@ import com.akash.camdetector.data.ToolStatus
 
 @Composable
 fun RequireCameraPermission(content: @Composable () -> Unit) {
+    if (LocalInspectionMode.current) {
+        // Preview/render environments have no activity result registry; show content as if granted.
+        content()
+        return
+    }
     val context = LocalContext.current
     var granted by remember {
         mutableStateOf(
@@ -68,6 +74,16 @@ fun RequireCameraPermission(content: @Composable () -> Unit) {
 
 @Composable
 fun CameraPreviewWithTorch(torchOn: Boolean, modifier: Modifier = Modifier) {
+    if (LocalInspectionMode.current) {
+        // Preview/render environments have no camera; draw the preview area as an honest placeholder.
+        Box(
+            modifier = modifier.background(MaterialTheme.colorScheme.surfaceVariant),
+            contentAlignment = Alignment.Center
+        ) {
+            Text("Camera preview area (live on device)", color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 12.sp)
+        }
+        return
+    }
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val previewView = remember { PreviewView(context) }
