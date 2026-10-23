@@ -27,6 +27,11 @@ jobs:
           api-level: 34
           target: google_apis
           arch: x86_64
+          emulator-boot-timeout: 1800
+          pre-emulator-launch-script: |
+            ls -l /dev/kvm || true
+            sudo chmod 666 /dev/kvm || true
+            ls -l /dev/kvm || true
           script: |
             set -e
             adb install -r app/build/outputs/apk/debug/app-debug.apk
