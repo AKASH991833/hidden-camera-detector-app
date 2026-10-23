@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.akash.camdetector.data.Report
+import com.akash.camdetector.data.ReportRepo
 import com.akash.camdetector.data.ReportStore
 import com.akash.camdetector.data.Tool
 import com.akash.camdetector.data.ToolFinding
@@ -61,7 +62,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun AppNav(store: ReportStore, dark: Boolean, onTheme: (Boolean) -> Unit, initialScreen: Screen? = null) {
+fun AppNav(store: ReportRepo, dark: Boolean, onTheme: (Boolean) -> Unit, initialScreen: Screen? = null) {
     var screen by remember { mutableStateOf<Screen>(initialScreen ?: Screen.Home) }
     val backStack = remember { mutableStateListOf<Screen>() }
     var reportsVersion by remember { mutableStateOf(0) }
@@ -207,7 +208,7 @@ private fun shotScreenFromName(name: String?): Screen? {
         "report" -> Screen.NewReport(
             listOf(
                 ToolFinding(Tool.LENS_GLINT, ToolStatus.NO_CLUE, "Example: no lens-like reflection was marked during this inspection."),
-                ToolFinding(Tool.IR_SCAN, ToolStatus.NOT_TESTED, "Example: this device could not emit or view IR light."),
+                ToolFinding(Tool.IR_SCAN, ToolStatus.NOT_TESTED, "Example: camera was unavailable in this environment, so the IR check did not run."),
                 ToolFinding(Tool.WIFI, ToolStatus.REVIEW, "Example: devices were found on your network; review any you do not recognize."),
                 ToolFinding(Tool.MAGNETIC, ToolStatus.NO_CLUE, "Example: magnetic field stayed near your baseline.")
             )

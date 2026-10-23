@@ -24,7 +24,7 @@
       classOutputs="build/intermediates/javac/release/compileReleaseJavaWithJavac/classes:build/tmp/kotlin-classes/release:build/kotlinToolingMetadata:build/intermediates/compile_and_runtime_not_namespaced_r_class_jar/release/processReleaseResources/R.jar"
       type="MAIN"
       applicationId="com.akash.camdetector"
-      generatedSourceFolders="build/generated/ap_generated_sources/release/out"
+      generatedSourceFolders="build/generated/ap_generated_sources/release/out:build/generated/source/buildConfig/release"
       generatedResourceFolders="build/generated/res/resValues/release"
       desugaredMethodsFiles="/home/sandbox/.gradle/caches/8.9/transforms/fec3c6ee5ca189b0092bc2b2083a54f0/transformed/D8BackportedDesugaredMethods.txt">
   </artifact>

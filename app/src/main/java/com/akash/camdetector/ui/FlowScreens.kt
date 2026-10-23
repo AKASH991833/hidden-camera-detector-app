@@ -74,7 +74,8 @@ fun ReportScreen(
         ScreenHeader("Scan Report", "Room check - " + fmt.format(Date(report.timestamp)), onClose)
 
         val done = report.findings.count { it.status != ToolStatus.NOT_TESTED }
-        val clues = report.findings.count { it.status == ToolStatus.CLUE_FOUND }
+        val notTested = report.findings.count { it.status == ToolStatus.NOT_TESTED }
+        val flagged = report.findings.count { it.status == ToolStatus.CLUE_FOUND || it.status == ToolStatus.REVIEW }
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -92,7 +93,8 @@ fun ReportScreen(
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    if (clues > 0) "$clues item(s) need a closer look. Check those spots by hand."
+                    if (flagged > 0) "$flagged item(s) need a closer look. Check those spots by hand."
+                    else if (notTested > 0) "Nothing flagged in the checks that ran. $notTested check(s) did not run, which tells nothing either way."
                     else "No item was flagged. That is not a guarantee - see the note below.",
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 11.sp,

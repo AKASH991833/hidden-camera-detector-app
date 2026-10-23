@@ -4,13 +4,13 @@ import android.content.Context
 import org.json.JSONArray
 import org.json.JSONObject
 
-class ReportStore(context: Context) {
+class ReportStore(context: Context) : ReportRepo {
     private val prefs = context.getSharedPreferences("camdetector", Context.MODE_PRIVATE)
 
-    fun isDarkTheme(): Boolean = prefs.getBoolean("dark", true)
-    fun setDarkTheme(dark: Boolean) = prefs.edit().putBoolean("dark", dark).apply()
+    override fun isDarkTheme(): Boolean = prefs.getBoolean("dark", true)
+    override fun setDarkTheme(dark: Boolean) = prefs.edit().putBoolean("dark", dark).apply()
 
-    fun saveReport(report: Report) {
+    override fun saveReport(report: Report) {
         val arr = JSONArray(prefs.getString("reports", "[]"))
         val obj = JSONObject()
         obj.put("id", report.id)
@@ -28,7 +28,7 @@ class ReportStore(context: Context) {
         prefs.edit().putString("reports", arr.toString()).apply()
     }
 
-    fun getReports(): List<Report> {
+    override fun getReports(): List<Report> {
         val out = mutableListOf<Report>()
         val arr = JSONArray(prefs.getString("reports", "[]"))
         for (i in 0 until arr.length()) {
@@ -50,7 +50,7 @@ class ReportStore(context: Context) {
         return out.sortedByDescending { it.timestamp }
     }
 
-    fun deleteReport(id: Long) {
+    override fun deleteReport(id: Long) {
         val kept = getReports().filter { it.id != id }
         prefs.edit().remove("reports").apply()
         for (r in kept.sortedBy { it.timestamp }) saveReport(r)
