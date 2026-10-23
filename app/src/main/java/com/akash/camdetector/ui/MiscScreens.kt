@@ -51,7 +51,7 @@ fun HistoryScreen(
         } else {
             Column(modifier = Modifier.padding(horizontal = 20.dp)) {
                 for (r in reports) {
-                    val clues = r.findings.count { it.status == com.akash.camdetector.data.ToolStatus.CLUE_FOUND }
+                    val clues = r.findings.count { it.status == com.akash.camdetector.data.ToolStatus.CLUE_FOUND || it.status == com.akash.camdetector.data.ToolStatus.REVIEW }
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()

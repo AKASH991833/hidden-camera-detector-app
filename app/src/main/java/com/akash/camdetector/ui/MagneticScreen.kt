@@ -57,7 +57,8 @@ fun MagneticScreen(onBack: () -> Unit, flow: FlowCallbacks? = null) {
                 .padding(horizontal = 20.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (sensor == null) {
+            val demoMode = inspectionMode && sensor == null
+            if (sensor == null && !demoMode) {
                 Spacer(modifier = Modifier.height(30.dp))
                 NoteCard("This phone does not report a magnetometer, so this check cannot run here.")
             } else {
@@ -68,7 +69,15 @@ fun MagneticScreen(onBack: () -> Unit, flow: FlowCallbacks? = null) {
                     lineHeight = 17.sp
                 )
                 Spacer(modifier = Modifier.height(24.dp))
-                val value = reading
+                val value = if (demoMode) 48f else reading
+                if (demoMode) {
+                    Text(
+                        "Example values - live readings appear on a phone with a magnetometer.",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontSize = 11.sp
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
                 Text(
                     if (value != null) "${value.toInt()} uT" else "-- uT",
                     color = MaterialTheme.colorScheme.onBackground,
@@ -81,7 +90,7 @@ fun MagneticScreen(onBack: () -> Unit, flow: FlowCallbacks? = null) {
                     fontSize = 12.sp
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                val base = baseline
+                val base = if (demoMode) 46f else baseline
                 val spike = value != null && base != null && value > base + 25f
                 Box(
                     modifier = Modifier
