@@ -5,6 +5,7 @@ import app.cash.paparazzi.Paparazzi
 import com.akash.camdetector.data.*
 import com.akash.camdetector.ui.*
 import org.junit.Rule
+import androidx.compose.foundation.layout.fillMaxSize
 import org.junit.Test
 
 class ScreensSnapshotTest {
@@ -23,7 +24,14 @@ class ScreensSnapshotTest {
 
     private fun shot(name: String, dark: Boolean, content: @androidx.compose.runtime.Composable () -> Unit) {
         try {
-            paparazzi.snapshot(name = name) { CamTheme(dark = dark) { content() } }
+            paparazzi.snapshot(name = name) {
+            CamTheme(dark = dark) {
+                androidx.compose.material3.Surface(
+                    modifier = androidx.compose.ui.Modifier.fillMaxSize(),
+                    color = androidx.compose.material3.MaterialTheme.colorScheme.background
+                ) { content() }
+            }
+        }
         } catch (t: Throwable) {
             System.err.println("SNAPSHOT-FAILED $name: ${t.javaClass.simpleName}: ${t.message?.take(200)}")
         }

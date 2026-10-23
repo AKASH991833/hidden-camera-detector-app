@@ -1,5 +1,7 @@
 package com.akash.camdetector.ui
 
+import com.akash.camdetector.BuildConfig
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -162,7 +164,7 @@ fun SettingsScreen(dark: Boolean, onTheme: (Boolean) -> Unit) {
             ) {
                 Text("About", color = MaterialTheme.colorScheme.onSurface, fontSize = 14.sp, fontWeight = FontWeight.Bold)
                 Text(
-                    "Hidden Camera Detector v0.1.0\n\nA guided room-inspection toolkit. It helps you check a room using your phone's camera, magnetometer and your own Wi-Fi network. It does not automatically detect cameras, and it never declares a room safe.\n\nEverything runs on this phone. No account, no internet upload, no ads, no tracking.",
+                    "Hidden Camera Detector v${BuildConfig.VERSION_NAME}\n\nA guided room-inspection toolkit. It helps you check a room using your phone's camera, magnetometer and your own Wi-Fi network. It does not automatically detect cameras, and it never declares a room safe.\n\nEverything runs on this phone. No account, no internet upload, no ads, no tracking.",
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 12.sp,
                     lineHeight = 18.sp,
