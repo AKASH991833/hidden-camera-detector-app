@@ -35,10 +35,16 @@ class ScreensSnapshotTest {
     private fun shot(name: String, dark: Boolean, initial: Screen, seedReport: Boolean = false) {
         try {
             paparazzi.snapshot(name = name) {
-                CamTheme(dark = dark) {
-                    val repo = FakeRepo()
-                    if (seedReport) repo.seed(sampleReport())
-                    AppNav(store = repo, dark = dark, onTheme = {}, initialScreen = initial)
+                // Paparazzi 1.3.4 does not set inspection mode; provide it so render-only
+                // placeholders in the app take effect (same as Android Studio previews).
+                androidx.compose.runtime.CompositionLocalProvider(
+                    androidx.compose.ui.platform.LocalInspectionMode provides true
+                ) {
+                    CamTheme(dark = dark) {
+                        val repo = FakeRepo()
+                        if (seedReport) repo.seed(sampleReport())
+                        AppNav(store = repo, dark = dark, onTheme = {}, initialScreen = initial)
+                    }
                 }
             }
         } catch (t: Throwable) {
